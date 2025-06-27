@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Popoto.js - Sistem Tata Surya</title>
+
+    <!-- Popoto dan Font Awesome CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/popoto/dist/popoto.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn2-jsdelivr.pages.dev/main/fontawesome_pro@6.6.0/css/all.css"
+    />
+
+    <style>
+      /* Ikon untuk label node: Planet, Satelit */
+      .ppt-taxo__span-icon.Planet::before {
+        content: "\f0ac"; /* globe icon */
+        font-family: "Font Awesome 6 Pro";
+        font-weight: 900;
+        color: #3498db;
+        margin-right: 5px;
+      }
+
+      .ppt-taxo__span-icon.Satelit::before {
+        content: "\f197"; /* satellite icon */
+        font-family: "Font Awesome 6 Pro";
+        font-weight: 900;
+        color: #e74c3c;
+        margin-right: 5px;
+      }
+
+      /* Warna teks pada link relasi */
+      .ppt-link__text--value {
+        fill: white;
+      }
+
+      /* Header bagian */
+      .ppt-section-header {
+        background-color: #2c3e50;
+        color: white;
+        padding: 15px;
+        font-size: 1.2rem;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="ppt-body">
+    <section class="ppt-section-main">
+      <!-- Judul tampilan -->
+      <div class="ppt-section-header">
+        <span class="ppt-header-span">Sistem Tata Surya Neo4j</span> (Popoto.js)
+      </div>
+
+      <!-- Area tampilan graf -->
+      <div class="ppt-container-graph">
+        <nav id="popoto-taxonomy" class="ppt-taxo-nav"></nav>
+        <div id="popoto-graph" class="ppt-div-graph"></div>
+      </div>
+
+      <!-- Panel hasil query Cypher -->
+      <div id="popoto-cypher" class="ppt-container-cypher"></div>
+
+      <!-- Tampilan jumlah hasil -->
+      <div class="ppt-section-header">
+        Hasil <span id="result-total-count" class="ppt-count"></span>
+      </div>
+      <div id="popoto-results" class="ppt-container-results"></div>
+    </section>
+
+    <!-- Library utama yang dibutuhkan -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/neo4j-driver-lite/lib/browser/neo4j-lite-web.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popoto/dist/popoto.min.js"></script>
+
+    <script>
+      // Koneksi ke database Neo4j
+      const driver = neo4j.driver(
+        "bolt://localhost:7687",
+        neo4j.auth.basic("neo4j", "12345678"),
+        { disableLosslessIntegers: true }
+      );
+
+      // Inisialisasi koneksi Popoto
+      popoto.runner.DRIVER = driver;
+      popoto.query.COLLECT_RELATIONS_WITH_VALUES = true;
+
+      // Konfigurasi node yang digunakan dalam graf
+      popoto.provider.node.Provider = {
+        Planet: {
+          returnAttributes: [
+            "nama",
+            "tipe",
+            "urutan_dari_matahari",
+            "diameter_km",
+            "komposisi_udara",
+            "jumlah_satelit",
+          ],
+          constraintAttribute: "nama",
+          autoExpandRelations: false,
+          getDisplayType: function () {
+            return popoto.provider.node.DisplayTypes.IMAGE;
+          },
+          getImagePath: function () {
+            return "image/planets.png";
+          },
+          displayAttribute: "nama",
+        },
+        Satelit: {
+          returnAttributes: ["nama", "jenis", "jarak_ke_planet"],
+          constraintAttribute: "nama",
+          autoExpandRelations: true,
+          getDisplayType: function () {
+            return popoto.provider.node.DisplayTypes.IMAGE;
+          },
+          getImagePath: function () {
+            return "image/satellite.png";
+          },
+          displayAttribute: "nama",
+        },
+      };
+
+      // Konfigurasi relasi
+      popoto.provider.link.Provider = {
+        MEMILIKI_SATELIT: {
+          returnAttributes: [],
+        },
+      };
+
+      // CSS untuk label taksonomi
+      popoto.provider.taxonomy.Provider = {
+        getCSSClass: function (label, element) {
+          return "ppt-taxo__" + element + " " + label;
+        },
+      };
+
+      // Menampilkan jumlah hasil pencarian
+      popoto.result.onTotalResultCount(function (count) {
+        document.getElementById("result-total-count").innerHTML =
+          "(" + count + ")";
+      });
+
+      // Mulai visualisasi graf dari node Planet
+      driver
+        .verifyConnectivity()
+        .then(function () {
+          popoto.start("Planet");
+        })
+        .catch(function (error) {
+          alert("Koneksi ke Neo4j gagal: " + error);
+          console.error(error);
+        });
+    </script>
+  </body>
+</html>
