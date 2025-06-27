@@ -1,0 +1,11 @@
+id_planet,nama_planet,tipe,urutan_dari_matahari,diameter_km,komposisi_udara,jumlah_satelit
+PL1,Bumi,Planet,1,12742,Oksigen & Nitrogen,1
+PL2,Mars,Planet,4,6779,Karbon dioksida,2
+PL3,Mars,Planet,4,6779,Karbon dioksida,2
+PL4,Jupiter,Planet,5,139820,Hidrogen & Helium,79
+PL5,Jupiter,Planet,5,139820,Hidrogen & Helium,79
+PL6,Saturnus,Planet,6,116460,Hidrogen & Helium,83
+PL7,Uranus,Planet,7,50724,"Hidrogen, Helium, Metana",27
+PL8,Neptunus,Planet,8,49244,"Hidrogen, Helium, Metana",14
+PL9,Pluto,Planet Kerdil,9,2376,"Nitrogen, Metana",5
+PL10,Bumi,Planet,1,12742,Oksigen & Nitrogen,1

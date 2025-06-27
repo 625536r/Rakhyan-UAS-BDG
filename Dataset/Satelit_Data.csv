@@ -1,0 +1,11 @@
+id_planet,nama_satelit,jenis_satelit,jarak_satelit_ke_planet
+PL1,Bulan,Natural,384400 km
+PL2,Phobos,Natural,9377 km
+PL3,Deimos,Natural,23460 km
+PL4,Ganymede,Natural,1070400 km
+PL5,Europa,Natural,670900 km
+PL6,Titan,Natural,1221870 km
+PL7,Miranda,Natural,129900 km
+PL8,Triton,Natural,354800 km
+PL9,Charon,Natural,19591 km
+PL10,ISS,Buatan,408 km
